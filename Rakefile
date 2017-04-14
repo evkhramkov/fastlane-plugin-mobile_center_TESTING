@@ -9,17 +9,22 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 
 api_endpoins = {
-  "prod" => "https://api.mobile.azure.com"
+  "prod" => "https://api.mobile.azure.com",
+  "dev" => "https://bifrost-int.trafficmanager.net"
 }
 
 swagger_path = "/preview/swagger.json"
-swagger_dest = "swagger/swagger.json"
+swagger_dest = "./swagger/swagger.before.json"
+swagger_fixed_dest = "./swagger/swagger.json"
+generated_dest = "./generated"
+
+environment = "dev"
 
 namespace :swagger do
   desc "Download swagger api specifications"
   task :download do
-    puts "Downloading swagger from #{api_endpoins['prod']}"
-    url = URI.parse("#{api_endpoins['prod']}#{swagger_path}")
+    puts "Downloading swagger from #{api_endpoins[environment]}"
+    url = URI.parse("#{api_endpoins[environment]}#{swagger_path}")
     req = Net::HTTP.new(url.host, url.port)
     req.use_ssl = true
     res = req.get(url.path)
@@ -27,8 +32,19 @@ namespace :swagger do
     puts "Swagger saved to #{swagger_dest}"
   end
 
-  desc "Generate "
+  desc "Install autorest and dependencies"
+  task :install_autorest do
+    sh "npm install"
+  end
+
+  desc "Fix swagger file"
+  task :fix do
+    sh "node ./scripts/fix-swagger #{swagger_dest} #{swagger_fixed_dest}"
+  end
+
+  desc "Generate code"
   task :generate do
+    sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -OutputDirectory #{generated_dest} -ft 3"
   end
 end
 

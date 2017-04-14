@@ -65,8 +65,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_postV01UsersByUserIdDevicesRegister"
+        ]
       }
     },
     "/v0.1/user/invitations/orgs/{invitation_token}/reject": {
@@ -386,6 +385,9 @@
         ]
       }
     },
+    "/v0.1/public/devices/register/complete": {},
+    "/v0.1/public/devices/register": {},
+    "/v0.1/private/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_id}/devices": {},
     "/v0.1/orgs/{org_name}/users/{user_name}": {
       "patch": {
         "description": "Updates the given organization user",
@@ -1070,8 +1072,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_getV01DevicesRegister"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/xcode_versions": {
@@ -4775,6 +4776,7 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/hockeyapp/app": {},
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases/{release_id}": {
       "get": {
         "operationId": "releases_getLatestByDistributionGroup",
@@ -5122,7 +5124,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/devices/download_devices_list": {
       "get": {
-        "operationId": "distribute_getDeviceListForDistributionGroup",
+        "operationId": "getDeviceListForDistributionGroup",
         "description": "Returns all devices associated with the given distribution group.",
         "parameters": [
           {
@@ -5156,10 +5158,12 @@
             "$ref": "#/parameters/app_name"
           }
         ],
+        "produces": [
+          "text/csv"
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "type": "file"
+            "description": "Success"
           },
           "404": {
             "description": "<b>not_found</b>: A distribution group can't be found.\n",
@@ -5186,7 +5190,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/devices": {
       "get": {
-        "operationId": "distribute_getDevicesForDistributionGroup",
+        "operationId": "getDevicesForDistributionGroup",
         "description": "Returns all devices associated with the given distribution group",
         "parameters": [
           {
@@ -5596,10 +5600,11 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases/{release_label}": {},
     "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases": {
       "get": {
         "description": "Gets the history of releases on a Deployment",
-        "operationId": "codepush_getReleases",
+        "operationId": "getReleases",
         "parameters": [
           {
             "$ref": "#/parameters/path_deployment_name"
@@ -5641,7 +5646,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/metrics": {
       "get": {
         "description": "Gets all releases metrics for specified Deployment",
-        "operationId": "codepush_getDeploymentMetrics",
+        "operationId": "getDeploymentMetrics",
         "parameters": [
           {
             "$ref": "#/parameters/path_deployment_name"
@@ -5683,7 +5688,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}": {
       "get": {
         "description": "Gets a CodePush Deployment (e.g. 'Staging') for the given app",
-        "operationId": "codepush_getDeployment",
+        "operationId": "getDeployment",
         "parameters": [
           {
             "$ref": "#/parameters/path_deployment_name"
@@ -5719,10 +5724,11 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/download": {},
     "/v0.1/apps/{owner_name}/{app_name}/deployments": {
       "get": {
         "description": "Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the given app",
-        "operationId": "codepush_getDeployments",
+        "operationId": "getDeployments",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -6347,8 +6353,7 @@
             "type": "string",
             "in": "path",
             "description": "A collection of commit SHAs comma-delimited",
-            "required": true,
-            "x-ms-skip-url-encoding": true
+            "required": true
           },
           {
             "$ref": "#/parameters/form"
@@ -8365,7 +8370,7 @@
     },
     "/v0.1/api_tokens/{api_token_id}": {
       "delete": {
-        "operationId": "account_deleteApiToken",
+        "operationId": "deleteApiToken",
         "description": "Delete the api_token object with the specific id",
         "parameters": [
           {
@@ -8411,7 +8416,7 @@
     },
     "/v0.1/api_tokens": {
       "get": {
-        "operationId": "account_getApiTokens",
+        "operationId": "getApiTokens",
         "description": "Returns api tokens for the authenticated user",
         "responses": {
           "200": {
@@ -8446,7 +8451,7 @@
         ]
       },
       "post": {
-        "operationId": "account_createApiToken",
+        "operationId": "createApiToken",
         "description": "Creates a new API token",
         "parameters": [
           {
