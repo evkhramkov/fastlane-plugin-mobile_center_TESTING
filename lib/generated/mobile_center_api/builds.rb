@@ -617,7 +617,7 @@ module MobileCenterApi
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [BuildServiceStatusResponse] operation results.
+    # @return [BuildServiceStatus] operation results.
     #
     def get_status_by_app_id(owner_name, app_name, custom_headers = nil)
       response = get_status_by_app_id_async(owner_name, app_name, custom_headers).value!
@@ -679,7 +679,7 @@ module MobileCenterApi
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = MobileCenterApi::Models::BuildServiceStatusResponse.mapper()
+            result_mapper = MobileCenterApi::Models::BuildServiceStatus.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response, 'result.body')
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)

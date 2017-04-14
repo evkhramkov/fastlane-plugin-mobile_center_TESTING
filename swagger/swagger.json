@@ -6628,7 +6628,7 @@
           "200": {
             "description": "Success. Availability for build service status is stored in response schema.",
             "schema": {
-              "$ref": "#/definitions/BuildServiceStatusResponse"
+              "$ref": "#/definitions/BuildServiceStatus"
             }
           },
           "400": {
@@ -10071,14 +10071,11 @@
         }
       }
     },
-    "BuildServiceStatusResponse": {
-      "required": [
-        "service",
-        "message",
-        "url",
-        "valid_until"
-      ],
+    "BuildServiceStatus": {
       "properties": {
+        "status": {
+          "type": "string"
+        },
         "service": {
           "type": "string"
         },
@@ -10089,9 +10086,12 @@
           "type": "string"
         },
         "valid_until": {
-          "type": "string"
+          "type": "integer"
         }
-      }
+      },
+      "required": [
+        "status"
+      ]
     },
     "ValidationErrorResponse": {
       "required": [

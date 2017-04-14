@@ -123,7 +123,7 @@ module MobileCenterApi
     autoload :CrashGroupAndVersion,                               'generated/mobile_center_api/models/crash_group_and_version.rb'
     autoload :DistributionRequest,                                'generated/mobile_center_api/models/distribution_request.rb'
     autoload :CrashGroupContainer,                                'generated/mobile_center_api/models/crash_group_container.rb'
-    autoload :BuildServiceStatusResponse,                         'generated/mobile_center_api/models/build_service_status_response.rb'
+    autoload :BuildServiceStatus,                                 'generated/mobile_center_api/models/build_service_status.rb'
     autoload :Event,                                              'generated/mobile_center_api/models/event.rb'
     autoload :DistributionGroup,                                  'generated/mobile_center_api/models/distribution_group.rb'
     autoload :Events,                                             'generated/mobile_center_api/models/events.rb'
