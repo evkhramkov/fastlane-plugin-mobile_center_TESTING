@@ -44,12 +44,12 @@ namespace :swagger do
 
   desc "Generate code"
   task generate: [:clean] do
-    sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -Namespace Swagger -OutputDirectory #{generated_dest} -ft 3"
+    sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -Namespace MobileCenterClient -PackageName mobile_center_client -OutputDirectory #{generated_dest} -ft 3"
   end
 
   desc "Clean generated"
   task :clean do
-    puts FileUtils.rm_rf('#{generated_dest}/generated')
+    puts FileUtils.rm_rf("#{generated_dest}/generated")
   end
 end
 

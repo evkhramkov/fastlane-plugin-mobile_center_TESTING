@@ -1,3 +1,5 @@
+require 'ms_rest'
+
 module Fastlane
   module Helper
     class MobileCenterHelper
@@ -6,6 +8,12 @@ module Fastlane
       #
       def self.show_message
         UI.message("Hello from the mobile_center plugin helper!")
+      end
+
+      def self.create_mobile_center_client
+        # MsRest::ServiceClient
+        # MsRest::ServiceClientCredentials
+        puts MobileCenterClient.constants
       end
     end
   end
