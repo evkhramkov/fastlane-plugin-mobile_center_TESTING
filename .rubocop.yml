@@ -225,6 +225,7 @@ Style/FileName:
     - '**/Fastfile'
     - '**/Deliverfile'
     - '**/Snapfile'
+    - './fastlane-plugin-mobile_center.gemspec'
 
 # We're not there yet
 Style/Documentation:

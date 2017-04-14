@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'fastlane/plugin/mobile_center/version'
@@ -6,10 +7,10 @@ require 'fastlane/plugin/mobile_center/version'
 Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-mobile_center'
   spec.version       = Fastlane::MobileCenter::VERSION
-  spec.author        = %q{Evgeniy Khramkov}
-  spec.email         = %q{ewgeniux@gmail.com}
+  spec.author        = 'Evgeniy Khramkov'
+  spec.email         = 'ewgeniux@gmail.com'
 
-  spec.summary       = %q{visual studio mobile center integration plugin}
+  spec.summary       = 'visual studio mobile center integration plugin'
   # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-mobile_center"
   spec.license       = "MIT"
 
