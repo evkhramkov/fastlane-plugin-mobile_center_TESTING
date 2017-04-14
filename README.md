@@ -1,6 +1,6 @@
 # mobile_center plugin
 
-[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-mobile_center)
+[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-mobile_center)[![Build Status](https://travis-ci.org/ewgenius/fastlane-plugin-mobile_center.svg?branch=master)](https://travis-ci.org/ewgenius/fastlane-plugin-mobile_center)
 
 ## Getting Started
 
