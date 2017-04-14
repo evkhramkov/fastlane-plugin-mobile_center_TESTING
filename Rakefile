@@ -46,8 +46,13 @@ namespace :swagger do
   task :generate do
     sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -OutputDirectory #{generated_dest} -ft 3"
   end
+
+  desc "Clean generated"
+  task :clean do
+    puts FileUtils.rm_rf(generated_dest)
+  end
 end
 
-task swagger: ['swagger:install_autorest', 'swagger:download', 'swagger:fix', 'swagger:generate']
+task swagger: ['swagger:clean', 'swagger:install_autorest', 'swagger:download', 'swagger:fix', 'swagger:generate']
 
 task default: [:spec, :rubocop]
