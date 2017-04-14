@@ -7,5 +7,6 @@ before_install:
 install:
   - 'bundle'
 script:
+  - 'touch .env && echo "TOKEN=TEST"'
   - 'rake'
   - 'rake swagger'

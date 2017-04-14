@@ -1,3 +1,9 @@
+# load variables from .env file
+open('../.env', 'r').readlines.each do |l|
+  kv = l.split('=')
+  ENV[kv[0]] = kv[1]
+end
+
 lane :test do
-  mobile_center
+  mobile_center(token: ENV["TOKEN"])
 end
