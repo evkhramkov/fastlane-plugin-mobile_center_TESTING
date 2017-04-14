@@ -213,6 +213,7 @@ AllCops:
   Exclude:
     - '**/lib/assets/custom_action_template.rb'
     - './vendor/**/*'
+    - './lib/fastlane/plugin/mobile_center/apis/generated/**/*'
 
 # They have not to be snake_case
 Style/FileName:
