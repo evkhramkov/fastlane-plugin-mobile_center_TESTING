@@ -48,4 +48,6 @@ namespace :swagger do
   end
 end
 
+task :swagger => ['swagger:install_autorest', 'swagger:download', 'swagger:fix', 'swagger:generate']
+
 task default: [:spec, :rubocop]
