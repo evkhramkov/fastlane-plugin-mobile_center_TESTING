@@ -16,7 +16,7 @@ api_endpoins = {
 swagger_path = "/preview/swagger.json"
 swagger_dest = "./swagger/swagger.before.json"
 swagger_fixed_dest = "./swagger/swagger.json"
-generated_dest = "./generated"
+generated_dest = "./lib/fastlane/plugin/mobile_center/apis"
 
 environment = "dev"
 
