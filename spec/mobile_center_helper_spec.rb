@@ -6,6 +6,11 @@ describe Fastlane::Helper::MobileCenterHelper do
   end
 
   describe '#build' do
-    Fastlane::Helper::MobileCenterHelper.build(ENV["MOBILE_CENTER_API_TOKEN"], ENV['MOBILE_CENTER_APP'])
+    Fastlane::Helper::MobileCenterHelper.build(
+      ENV['MOBILE_CENTER_API_TOKEN'],
+      ENV['MOBILE_CENTER_BRANCH'],
+      ENV['MOBILE_CENTER_APP_OWNER'],
+      ENV['MOBILE_CENTER_APP_NAME']
+    )
   end
 end

@@ -3,7 +3,12 @@ module Fastlane
     class BuildAction < Action
       def self.run(params)
         UI.message("Running build action")
-        Helper::MobileCenterHelper.build(params[:api_token], params[:app])
+        Helper::MobileCenterHelper.build(
+          params[:api_token],
+          params[:branch],
+          params[:app_owner],
+          params[:app_name]
+        )
       end
 
       def self.description
@@ -30,8 +35,21 @@ module Fastlane
                                description: "Auth token",
                                   optional: false,
                                       type: String),
-          FastlaneCore::ConfigItem.new(key: :app,
-                                  env_name: "MOBILE_CENTER_APP",
+
+          FastlaneCore::ConfigItem.new(key: :branch,
+                                  env_name: "MOBILE_CENTER_BRANCH",
+                               description: "Branch",
+                                  optional: false,
+                                      type: String),
+
+          FastlaneCore::ConfigItem.new(key: :app_owner,
+                                  env_name: "MOBILE_CENTER_APP_OWNER",
+                               description: "App name",
+                                  optional: false,
+                                      type: String),
+
+          FastlaneCore::ConfigItem.new(key: :app_name,
+                                  env_name: "MOBILE_CENTER_APP_NAME",
                                description: "App name",
                                   optional: false,
                                       type: String)

@@ -8,8 +8,10 @@ module Fastlane
         MobileCenterClient::MobileCenterClient.new(credentials)
       end
 
-      def self.build(api_token, app_name)
+      def self.build(api_token, branch, app_owner, app_name)
         puts api_token.to_s
+        puts branch.to_s
+        puts app_owner.to_s
         puts app_name.to_s
       end
     end

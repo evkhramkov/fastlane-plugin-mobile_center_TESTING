@@ -6,5 +6,10 @@ end
 
 lane :test do
   mobile_center(api_token: ENV["MOBILE_CENTER_API_TOKEN"])
-  build(api_token: ENV["MOBILE_CENTER_API_TOKEN"], app: ENV["MOBILE_CENTER_APP"])
+  build(
+    api_token: ENV['MOBILE_CENTER_API_TOKEN'],
+    branch: ENV['MOBILE_CENTER_BRANCH'],
+    app_owner: ENV['MOBILE_CENTER_APP_OWNER'],
+    app_name: ENV['MOBILE_CENTER_APP_NAME']
+  )
 end
