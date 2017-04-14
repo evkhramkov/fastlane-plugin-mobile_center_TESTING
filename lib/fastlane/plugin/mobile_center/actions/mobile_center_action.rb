@@ -3,7 +3,7 @@ module Fastlane
     class MobileCenterAction < Action
       def self.run(params)
         UI.message("The mobile_center plugin is working!")
-        Helper::MobileCenterHelper.create_mobile_center_client(params[:token])
+        Helper::MobileCenterHelper.create_mobile_center_client(params[:api_token])
       end
 
       def self.description
@@ -25,8 +25,8 @@ module Fastlane
 
       def self.available_options
         [
-          FastlaneCore::ConfigItem.new(key: :token,
-                                  env_name: "MOBILE_CENTER_TOKEN",
+          FastlaneCore::ConfigItem.new(key: :api_token,
+                                  env_name: "MOBILE_CENTER_API_TOKEN",
                                description: "Auth token",
                                   optional: false,
                                       type: String)

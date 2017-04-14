@@ -5,5 +5,5 @@ open('../.env', 'r').readlines.each do |l|
 end
 
 lane :test do
-  mobile_center(token: ENV["TOKEN"])
+  mobile_center(api_token: ENV["TOKEN"])
 end
