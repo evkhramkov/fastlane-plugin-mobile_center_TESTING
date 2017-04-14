@@ -16,7 +16,7 @@ api_endpoins = {
 swagger_path = "/preview/swagger.json"
 swagger_dest = "./swagger/swagger.before.json"
 swagger_fixed_dest = "./swagger/swagger.json"
-generated_dest = "./lib/fastlane/plugin/mobile_center/apis"
+generated_dest = "./lib"
 
 environment = "dev"
 
@@ -43,16 +43,16 @@ namespace :swagger do
   end
 
   desc "Generate code"
-  task :generate do
-    sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -OutputDirectory #{generated_dest} -ft 3"
+  task generate: [:clean] do
+    sh "./node_modules/.bin/autorest -Modeler Swagger -Input #{swagger_fixed_dest} -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -Namespace Swagger -OutputDirectory #{generated_dest} -ft 3"
   end
 
   desc "Clean generated"
   task :clean do
-    puts FileUtils.rm_rf(generated_dest)
+    puts FileUtils.rm_rf('#{generated_dest}/generated')
   end
 end
 
-task swagger: ['swagger:clean', 'swagger:install_autorest', 'swagger:download', 'swagger:fix', 'swagger:generate']
+task swagger: ['swagger:install_autorest', 'swagger:download', 'swagger:fix', 'swagger:generate']
 
 task default: [:spec, :rubocop]

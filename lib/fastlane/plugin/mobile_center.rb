@@ -1,4 +1,5 @@
 require 'fastlane/plugin/mobile_center/version'
+require 'generated/swagger'
 
 module Fastlane
   module MobileCenter
