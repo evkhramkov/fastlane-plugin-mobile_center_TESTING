@@ -1,5 +1,5 @@
 require 'fastlane/plugin/mobile_center/version'
-require 'generated/mobile_center_client'
+require 'generated/mobile_center_api'
 
 module Fastlane
   module MobileCenter

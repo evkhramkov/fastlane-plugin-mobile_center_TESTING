@@ -5,14 +5,13 @@ module Fastlane
     class MobileCenterHelper
       def self.create_mobile_center_client(api_token)
         credentials = MsRest::TokenCredentials.new(api_token)
-        MobileCenterClient::MobileCenterClient.new(credentials)
+        MobileCenterApi::MobileCenterClient.new(credentials)
       end
 
-      def self.build(api_token, branch, app_owner, app_name)
-        puts api_token.to_s
-        puts branch.to_s
-        puts app_owner.to_s
-        puts app_name.to_s
+      def self.build(api_token, branch, owner_name, app_name)
+        client = self.create_mobile_center_client(api_token)
+        result = client.builds.queue(branch, owner_name, app_name)
+        puts result
       end
     end
   end

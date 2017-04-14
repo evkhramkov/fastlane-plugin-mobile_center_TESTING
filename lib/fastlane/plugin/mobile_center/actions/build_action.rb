@@ -6,7 +6,7 @@ module Fastlane
         Helper::MobileCenterHelper.build(
           params[:api_token],
           params[:branch],
-          params[:app_owner],
+          params[:owner_name],
           params[:app_name]
         )
       end
@@ -42,8 +42,8 @@ module Fastlane
                                   optional: false,
                                       type: String),
 
-          FastlaneCore::ConfigItem.new(key: :app_owner,
-                                  env_name: "MOBILE_CENTER_APP_OWNER",
+          FastlaneCore::ConfigItem.new(key: :owner_name,
+                                  env_name: "MOBILE_CENTER_OWNER_NAME",
                                description: "App name",
                                   optional: false,
                                       type: String),

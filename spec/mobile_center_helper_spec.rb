@@ -9,7 +9,7 @@ describe Fastlane::Helper::MobileCenterHelper do
     Fastlane::Helper::MobileCenterHelper.build(
       ENV['MOBILE_CENTER_API_TOKEN'],
       ENV['MOBILE_CENTER_BRANCH'],
-      ENV['MOBILE_CENTER_APP_OWNER'],
+      ENV['MOBILE_CENTER_OWNER_NAME'],
       ENV['MOBILE_CENTER_APP_NAME']
     )
   end
