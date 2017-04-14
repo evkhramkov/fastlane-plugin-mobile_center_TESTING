@@ -1,0 +1,12 @@
+{
+  "name": "fastlane-plugin-mobile_center",
+  "version": "0.0.0",
+  "scripts": {
+    "swagger": "./node_modules/.bin/autorest -Modeler Swagger -Input ./swagger/swagger.json -AddCredentials true -ClientName MobileCenterClient -CodeGenerator Ruby -OutputDirectory generated -ft 3"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autorest": "^0.12.3"
+  }
+}

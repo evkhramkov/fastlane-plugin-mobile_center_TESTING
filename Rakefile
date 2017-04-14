@@ -9,17 +9,26 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop)
 
 api_endpoins = {
-  "prod" => "https://api.mobile.azure.com/preview/swagger.json"
+  "prod" => "https://api.mobile.azure.com"
 }
 
-namespace :dev do
+swagger_path = "/preview/swagger.json"
+swagger_dest = "swagger/swagger.json"
+
+namespace :swagger do
   desc "Download swagger api specifications"
-  task :download_swagger do
-    url = URI.parse(api_endpoins["prod"])
+  task :download do
+    puts "Downloading swagger from #{api_endpoins['prod']}"
+    url = URI.parse("#{api_endpoins['prod']}#{swagger_path}")
     req = Net::HTTP.new(url.host, url.port)
     req.use_ssl = true
     res = req.get(url.path)
-    open("swagger/swagger.json", "w") { |file| file.write(res.body) }
+    open(swagger_dest, "w") { |file| file.write(res.body) }
+    puts "Swagger saved to #{swagger_dest}"
+  end
+
+  desc "Generate "
+  task :generate do
   end
 end
 

@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "preview",
-    "title": "Mobile Center Client",
-    "description": "Microsoft Visual Studio Mobile Center API"
+    "title": "Mobile Center API Service",
+    "description": "Mobile Center Frontdoor Graph API Service"
   },
   "host": "api.mobile.azure.com",
   "basePath": "/",
@@ -17,93 +17,6 @@
     "application/json"
   ],
   "paths": {
-    "/v0.1/users/{user_id}/devices/register": {
-      "post": {
-        "description": "Registers a user for an existing device",
-        "parameters": [
-          {
-            "name": "user_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the user",
-            "required": true
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The device info.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeviceRegistrationRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/DeviceRegistrationResponse"
-            }
-          },
-          "404": {
-            "description": "<b>not_found</b>: The user or the device can't be found.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "500": {
-            "description": "An internal error.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
-    "/v0.1/users/{user_id}/devices": {
-      "get": {
-        "description": "Return the list of devices registered to a user",
-        "parameters": [
-          {
-            "name": "user_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the user",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UserDevicesResponse"
-            }
-          },
-          "500": {
-            "description": "An internal error.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
     "/v0.1/user/invitations/orgs/{invitation_token}/reject": {
       "post": {
         "description": "Rejects a pending organization invitation",
@@ -129,7 +42,7 @@
             }
           }
         },
-        "operationId": "orgInvitations_reject",
+        "operationId": "account_rejectOrganizationInvitation",
         "security": [
           {
             "APIToken": []
@@ -165,7 +78,7 @@
             }
           }
         },
-        "operationId": "orgInvitations_accept",
+        "operationId": "account_acceptOrganizationInvitation",
         "security": [
           {
             "APIToken": []
@@ -197,7 +110,7 @@
             }
           }
         },
-        "operationId": "distributionGroupInvitations_acceptAll",
+        "operationId": "account_acceptGroupsInvitation",
         "security": [
           {
             "APIToken": []
@@ -233,7 +146,7 @@
             }
           }
         },
-        "operationId": "appInvitations_reject",
+        "operationId": "account_rejectInvitation",
         "security": [
           {
             "APIToken": []
@@ -269,7 +182,7 @@
             }
           }
         },
-        "operationId": "appInvitations_accept",
+        "operationId": "account_acceptInvitation",
         "security": [
           {
             "APIToken": []
@@ -304,7 +217,7 @@
             }
           }
         },
-        "operationId": "users_get",
+        "operationId": "account_getUserProfile",
         "security": [
           {
             "APIToken": []
@@ -353,7 +266,7 @@
             }
           }
         },
-        "operationId": "users_update",
+        "operationId": "account_updateUserProfile",
         "security": [
           {
             "APIToken": []
@@ -367,7 +280,7 @@
     "/v0.1/sdk/apps/{app_secret}/releases/{release_hash}": {
       "get": {
         "description": "Get a release with hash `release_hash`. If multiple releases matches the release_hash, return the latest one. If `release_hash` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
-        "operationId": "getReleaseOrLatestReleaseByHash",
+        "operationId": "distribute_getReleaseOrLatestReleaseByHash",
         "parameters": [
           {
             "name": "app_secret",
@@ -399,7 +312,7 @@
             }
           },
           "404": {
-            "description": "<b>not_found</b> - A release or an app can't be found.\n<b>no_releases_for_user</b> - No releases available for that user (can only return when `release_hash` is `latest`)\n",
+            "description": "<b>not_found</b> - A release or an app can't be found.\n",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -421,684 +334,32 @@
         ]
       }
     },
-    "/v0.1/public/devices/register/redirect": {},
-    "/v0.1/public/devices/register": {},
-    "/v0.1/private/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_id}/devices": {},
-    "/v0.1/orgs/{org_name}/users/{user_name}": {
-      "patch": {
-        "description": "Updates the given organization user",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/user_name"
-          },
-          {
-            "name": "organization_user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OrganizationUserPatchRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrganizationUserResponse"
-            }
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "users_updateOrgRole",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "delete": {
-        "description": "Updates the given organization user",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/user_name"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "users_removeFromOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/users": {
+    "/v0.1/management/crashes/apps/{owner_name}/{app_name}/crashes/{crash_id}/raw": {
       "get": {
-        "description": "Returns a list of users that belong to an organization",
+        "description": "Gets the json of a specific crash",
+        "operationId": "crash_getCrashRaw",
         "parameters": [
           {
-            "$ref": "#/parameters/organization_name"
+            "$ref": "#/parameters/path_crash_id"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrganizationUserResponse"
-              }
+              "$ref": "#/definitions/RawCrashLog"
             }
           },
-          "400": {
-            "description": "BadRequest",
+          "default": {
+            "description": "Error",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "users_listForOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/invitations/resend": {
-      "post": {
-        "description": "Cancels an existing organization for the user and sends a new one",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "user_email",
-            "in": "body",
-            "description": "The email of the user for which to resend the invitation",
-            "schema": {
-              "$ref": "#/definitions/UserEmailRequest"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "orgInvitations_sendNewInvitation",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/invitations": {
-      "post": {
-        "description": "Invites a new or existing user to an organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "user_email",
-            "in": "body",
-            "description": "The email of the user to invite",
-            "schema": {
-              "$ref": "#/definitions/UserEmailRequest"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "orgInvitations_create",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "delete": {
-        "description": "Removes a user's invitation to an organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "user_email",
-            "in": "body",
-            "description": "The email of the user whose invitation should be removed",
-            "schema": {
-              "$ref": "#/definitions/UserEmailRequest"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "orgInvitations_delete",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "get": {
-        "description": "Gets the pending invitations for the organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrganizationInvitationSimpleDetailResponse"
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "orgInvitations_listPending",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/apps": {
-      "post": {
-        "description": "Creates a new app for the organizatiion and returns it to the caller",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/app"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/AppResponse"
-            }
-          },
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/AppResponse"
-            }
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "apps_createForOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "get": {
-        "description": "Returns a list of apps for the organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AppResponse"
-              }
-            }
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "apps_listForOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}": {
-      "get": {
-        "description": "Returns the details of a single organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrganizationResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organizations_get",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "patch": {
-        "description": "Returns a list of organizations the requesting user has access to",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "org",
-            "in": "body",
-            "description": "The data for the org",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OrganizationPatchRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrganizationResponse"
-            }
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organizations_update",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "delete": {
-        "description": "Deletes a single organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organizations_delete",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs": {
-      "post": {
-        "description": "Creates a new organization and returns it to the caller",
-        "parameters": [
-          {
-            "name": "organization",
-            "in": "body",
-            "description": "The organization data",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OrganizationRequest"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/OrganizationResponse"
-            }
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organization_createOrUpdate",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "get": {
-        "description": "Returns a list of organizations the requesting user has access to",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "properties": {
-                  "display_name": {
-                    "description": "The display name of the organization",
-                    "type": "string"
-                  },
-                  "name": {
-                    "description": "The slug name of the organization",
-                    "type": "string"
-                  },
-                  "collaborator_role": {
-                    "description": "The role the current user has within the organization",
-                    "type": "string"
-                  },
-                  "collaborators_count": {
-                    "description": "The number of users that are part of this organization"
-                  }
-                },
-                "required": [
-                  "collaborator_role",
-                  "collaborators_count",
-                  "display_name",
-                  "name"
-                ]
-              }
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organizations_list",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/internal/registration": {},
-    "/v0.1/devices/register": {
-      "get": {
-        "description": "Serve a .mobileconfig to request a UDID from a device",
-        "parameters": [
-          {
-            "name": "original_url",
-            "type": "string",
-            "in": "query",
-            "description": "The url which should be called after device registration finished",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/DeviceConfigurationResponse"
-            }
-          },
-          "500": {
-            "description": "An internal error.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
+              "$ref": "#/definitions/Failure"
             }
           }
         },
@@ -1108,7 +369,7 @@
           }
         ],
         "tags": [
-          "distribute"
+          "crash"
         ]
       }
     },
@@ -1137,7 +398,7 @@
             }
           }
         },
-        "operationId": "builds_listXcodeVersions",
+        "operationId": "build_getXcodeVersions",
         "security": [
           {
             "APIToken": []
@@ -1152,7 +413,7 @@
       "get": {
         "description": "Gets a list of application versions",
         "summary": "Gets a list of application versions",
-        "operationId": "Crashes_getAppVersions",
+        "operationId": "crash_getAppVersions",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -1229,7 +490,7 @@
             }
           }
         },
-        "operationId": "apps_removeUser",
+        "operationId": "account_deleteAppUser",
         "security": [
           {
             "APIToken": []
@@ -1252,7 +513,7 @@
             "name": "user_email",
             "type": "string",
             "in": "path",
-            "description": "The user email of the user to patch",
+            "description": "The user email of the user to delete",
             "required": true
           },
           {
@@ -1287,7 +548,7 @@
             }
           }
         },
-        "operationId": "apps_updateUserPermissions",
+        "operationId": "account_patch",
         "security": [
           {
             "APIToken": []
@@ -1338,7 +599,7 @@
             }
           }
         },
-        "operationId": "users_list",
+        "operationId": "account_getAppUsers",
         "security": [
           {
             "APIToken": []
@@ -1346,226 +607,6 @@
         ],
         "tags": [
           "account"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}": {
-      "get": {
-        "description": "Gets a device set belonging to the user",
-        "operationId": "test_getDeviceSetOfUser",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "put": {
-        "description": "Updates a device set belonging to the user",
-        "operationId": "test_updateDeviceSetOfUser",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "name": "devices",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "in": "formData",
-            "description": "List of device IDs",
-            "required": true
-          },
-          {
-            "name": "name",
-            "type": "string",
-            "in": "formData",
-            "description": "The name of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "400": {
-            "description": "Invalid list of device IDs or conflicting name",
-            "schema": {
-              "$ref": "#/definitions/TestCloudErrorDetails"
-            }
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "delete": {
-        "description": "Deletes a device set belonging to the user",
-        "operationId": "test_deleteDeviceSetOfUser",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/user/device_sets": {
-      "get": {
-        "description": "Lists device sets belonging to the user",
-        "operationId": "test_listDeviceSetsOfUser",
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DeviceSet"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "post": {
-        "description": "Creates a device set belonging to the user",
-        "operationId": "test_createDeviceSetOfUser",
-        "parameters": [
-          {
-            "name": "devices",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "in": "formData",
-            "description": "List of device IDs",
-            "required": true
-          },
-          {
-            "name": "name",
-            "type": "string",
-            "in": "formData",
-            "description": "The name of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "400": {
-            "description": "Invalid list of device IDs or conflicting name",
-            "schema": {
-              "$ref": "#/definitions/TestCloudErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
         ]
       }
     },
@@ -1609,7 +650,7 @@
             }
           }
         },
-        "operationId": "apps_listTesters",
+        "operationId": "account_getAppTesters",
         "security": [
           {
             "APIToken": []
@@ -2204,7 +1245,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}/ignore": {
       "post": {
         "description": "Marks a symbol by id (uuid) as ignored",
-        "operationId": "Symbols_postIgnoreSymbol",
+        "operationId": "crash_postIgnoreSymbol",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_id"
@@ -2255,7 +1296,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}": {
       "get": {
         "description": "Returns a particular symbol by id (uuid) for the provided application",
-        "operationId": "Symbols_getSymbol",
+        "operationId": "crash_getSymbol",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_id"
@@ -2306,7 +1347,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols": {
       "get": {
         "description": "Returns the list of all symbols for the provided application",
-        "operationId": "Symbols_getSymbols",
+        "operationId": "crash_getSymbols",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -2348,7 +1389,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbol_uploads/{symbol_upload_id}": {
       "get": {
         "description": "Gets a symbol upload by id for the specified application",
-        "operationId": "Symbols_getSymbolUpload",
+        "operationId": "crash_getSymbolUpload",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_upload_id"
@@ -2397,7 +1438,7 @@
       },
       "patch": {
         "description": "Commits or aborts the symbol upload process for a new set of symbols for the specified application",
-        "operationId": "Symbols_patchSymbolUpload",
+        "operationId": "crash_patchSymbolUpload",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_upload_id"
@@ -2455,7 +1496,7 @@
       },
       "delete": {
         "description": "Deletes a symbol upload by id for the specified application",
-        "operationId": "Symbols_deleteSymbolUpload",
+        "operationId": "crash_deleteSymbolUpload",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_upload_id"
@@ -2506,7 +1547,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbol_uploads": {
       "get": {
         "description": "Gets a list of all uploads for the specified application",
-        "operationId": "Symbols_getSymbolUploads",
+        "operationId": "crash_getSymbolUploads",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -2546,7 +1587,7 @@
       },
       "post": {
         "description": "Begins the symbol upload process for a new set of symbols for the specified application",
-        "operationId": "Symbols_postSymbolUpload",
+        "operationId": "crash_postSymbolUpload",
         "parameters": [
           {
             "name": "body",
@@ -2604,7 +1645,7 @@
       "get": {
         "description": "Gets missing symbol crash group by its id",
         "summary": "Gets missing symbol crash group by its id",
-        "operationId": "crashParking_getMissingSymbolCrashGroupById",
+        "operationId": "crash_getMissingSymbolCrashGroupById",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_group_id"
@@ -2644,7 +1685,7 @@
       "get": {
         "description": "Gets top N (ordered by crash count) of crash groups by missing symbol",
         "summary": "Gets top N (ordered by crash count) of crash groups by missing symbol",
-        "operationId": "crashParking_getTopNFilteredMissingSymbolCrashGroups",
+        "operationId": "crash_getTopNFilteredMissingSymbolCrashGroups",
         "parameters": [
           {
             "$ref": "#/parameters/query_top"
@@ -3534,6 +2575,176 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push/keys": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "operationId": "push_getKeys",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push/config": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "operationId": "push_getConfiguration",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "hubDescription",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PushConfig"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "operationId": "push_setConfiguration",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "in": "path",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "operationId": "push_getNotificationHub",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/ping/": {
       "get": {
         "parameters": [
@@ -3670,7 +2881,8 @@
             "required": true,
             "type": "string",
             "enum": [
-              "appsvc"
+              "appsvc",
+              "push"
             ]
           },
           {
@@ -3720,7 +2932,8 @@
             "required": true,
             "type": "string",
             "enum": [
-              "appsvc"
+              "appsvc",
+              "push"
             ]
           },
           {
@@ -3768,7 +2981,8 @@
             "required": true,
             "type": "string",
             "enum": [
-              "appsvc"
+              "appsvc",
+              "push"
             ]
           },
           {
@@ -3873,8 +3087,7 @@
             "required": true,
             "enum": [
               "github",
-              "bitbucket",
-              "vsts"
+              "bitbucket"
             ]
           },
           {
@@ -3901,7 +3114,7 @@
             }
           }
         },
-        "operationId": "repositories_list",
+        "operationId": "build_getRepositories",
         "security": [
           {
             "APIToken": []
@@ -3944,7 +3157,7 @@
             }
           }
         },
-        "operationId": "repositoryConfigurations_list",
+        "operationId": "build_getRepositoryConfiguration",
         "security": [
           {
             "APIToken": []
@@ -3987,7 +3200,7 @@
             }
           }
         },
-        "operationId": "repositoryConfigurations_update",
+        "operationId": "build_createRepositoryConfiguration",
         "security": [
           {
             "APIToken": []
@@ -4021,7 +3234,7 @@
             }
           }
         },
-        "operationId": "repositoryConfigurations_remove",
+        "operationId": "build_deleteRepositoryConfiguration",
         "security": [
           {
             "APIToken": []
@@ -4035,7 +3248,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}": {
       "get": {
         "description": "Get a release with id `release_id`. if `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
-        "operationId": "getRelease",
+        "operationId": "distribute_getRelease",
         "parameters": [
           {
             "name": "release_id",
@@ -4065,7 +3278,7 @@
             }
           },
           "404": {
-            "description": "<b>not_found</b> - A release or an app can't be found.\n<b>no_releases_for_user</b> - No releases available for that user (can only return when `release_id` is `latest`)\n",
+            "description": "<b>not_found</b> - A release or an app can't be found.\n",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -4120,7 +3333,7 @@
             }
           }
         },
-        "operationId": "updateRelease",
+        "operationId": "distribute_updateRelease",
         "security": [
           {
             "APIToken": []
@@ -4164,7 +3377,7 @@
             }
           }
         },
-        "operationId": "deleteRelease",
+        "operationId": "distribute_deleteRelease",
         "security": [
           {
             "APIToken": []
@@ -4206,12 +3419,12 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/BasicReleaseDetails"
+                "$ref": "#/definitions/ReleaseDetails"
               }
             }
           }
         },
-        "operationId": "getReleases",
+        "operationId": "distribute_getReleases",
         "security": [
           {
             "APIToken": []
@@ -4260,7 +3473,7 @@
             "description": "Unknown upload_id or status was committed but the upload hasn't finished."
           }
         },
-        "operationId": "updateReleaseUpload",
+        "operationId": "distribute_updateReleaseUpload",
         "security": [
           {
             "APIToken": []
@@ -4290,7 +3503,7 @@
             }
           }
         },
-        "operationId": "createReleaseUpload",
+        "operationId": "distribute_createReleaseUpload",
         "security": [
           {
             "APIToken": []
@@ -4304,7 +3517,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/recent_releases": {
       "get": {
         "description": "Get the latest release from every distribution group associated with an application.",
-        "operationId": "getLatestReleases",
+        "operationId": "distribute_getLatestReleases",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -4331,231 +3544,6 @@
         ],
         "tags": [
           "distribute"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/recent_packages": {},
-    "/v0.1/apps/{owner_name}/{app_name}/packages/{package_id}": {},
-    "/v0.1/apps/{owner_name}/{app_name}/packages": {},
-    "/v0.1/apps/{owner_name}/{app_name}/package_uploads/{upload_id}": {},
-    "/v0.1/apps/{owner_name}/{app_name}/package_uploads": {},
-    "/v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}": {
-      "get": {
-        "description": "Gets a device set belonging to the owner",
-        "operationId": "test_getDeviceSetOfOwner",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "put": {
-        "description": "Updates a device set belonging to the owner",
-        "operationId": "test_updateDeviceSetOfOwner",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "name": "devices",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "in": "formData",
-            "description": "List of device IDs",
-            "required": true
-          },
-          {
-            "name": "name",
-            "type": "string",
-            "in": "formData",
-            "description": "The name of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "400": {
-            "description": "Invalid list of device IDs or conflicting name",
-            "schema": {
-              "$ref": "#/definitions/TestCloudErrorDetails"
-            }
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "delete": {
-        "description": "Deletes a device set belonging to the owner",
-        "operationId": "test_deleteDeviceSetOfOwner",
-        "parameters": [
-          {
-            "name": "id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Device set with the given ID was not found"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/owner/device_sets": {
-      "get": {
-        "description": "Lists device sets belonging to the owner",
-        "operationId": "test_listDeviceSetsOfOwner",
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DeviceSet"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      },
-      "post": {
-        "description": "Creates a device set belonging to the owner",
-        "operationId": "test_createDeviceSetOfOwner",
-        "parameters": [
-          {
-            "name": "devices",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "in": "formData",
-            "description": "List of device IDs",
-            "required": true
-          },
-          {
-            "name": "name",
-            "type": "string",
-            "in": "formData",
-            "description": "The name of the device set",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DeviceSet"
-            }
-          },
-          "400": {
-            "description": "Invalid list of device IDs or conflicting name",
-            "schema": {
-              "$ref": "#/definitions/TestCloudErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
         ]
       }
     },
@@ -4607,7 +3595,7 @@
             }
           }
         },
-        "operationId": "appInvitations_createByEmail",
+        "operationId": "deprecated_inviteAppUser",
         "security": [
           {
             "APIToken": []
@@ -4665,7 +3653,7 @@
             }
           }
         },
-        "operationId": "appInvitations_updatePermissions",
+        "operationId": "account_updateAppUserInvitationsPermission",
         "security": [
           {
             "APIToken": []
@@ -4715,7 +3703,7 @@
             }
           }
         },
-        "operationId": "appInvitations_delete",
+        "operationId": "account_deleteAppInvitation",
         "security": [
           {
             "APIToken": []
@@ -4774,7 +3762,7 @@
             }
           }
         },
-        "operationId": "appInvitations_create",
+        "operationId": "account_inviteAppUser",
         "security": [
           {
             "APIToken": []
@@ -4814,7 +3802,7 @@
             }
           }
         },
-        "operationId": "appInvitations_list",
+        "operationId": "account_getAppInvitations",
         "security": [
           {
             "APIToken": []
@@ -4825,10 +3813,9 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/hockeyapp/app": {},
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases/{release_id}": {
       "get": {
-        "operationId": "getLatestReleaseForDistributionGroup",
+        "operationId": "distribute_getLatestReleaseForDistributionGroup",
         "description": "Return detailed information about a distributed release in a given distribution group.",
         "parameters": [
           {
@@ -4882,7 +3869,7 @@
         ]
       },
       "delete": {
-        "operationId": "deleteReleaseForDistributionGroup",
+        "operationId": "distribute_deleteReleaseForDistributionGroup",
         "description": "Deletes a release with id 'release_id' in a given distribution group.",
         "parameters": [
           {
@@ -4914,7 +3901,7 @@
             }
           },
           "403": {
-            "description": "error code - forbidden - A release from a legacy HockeyApp distribution group can’t be deleted with Mobile Center API. To delete a legacy HockeyApp release, please use the HockeyApp API. https://support.hockeyapp.net/kb/api/api-versions#delete-single-version",
+            "description": "error code - forbidden - A release from a legacy HockeyApp distribution group canâ€™t be deleted with Mobile Center API. To delete a legacy HockeyApp release, please use the HockeyApp API. https://support.hockeyapp.net/kb/api/api-versions#delete-single-version",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -4938,7 +3925,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases": {
       "get": {
-        "operationId": "getReleasesForDistributionGroup",
+        "operationId": "distribute_getReleasesForDistributionGroup",
         "description": "Return detailed information about distributed releases in a given distribution group.",
         "parameters": [
           {
@@ -4961,7 +3948,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/BasicReleaseDetails"
+                "$ref": "#/definitions/ReleaseDetails"
               }
             }
           },
@@ -4982,8 +3969,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages/{package_id}": {},
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages": {},
     "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members": {
       "get": {
         "description": "Returns a list of member details in the distribution group specified",
@@ -5032,7 +4017,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_listUsers",
+        "operationId": "account_getDistributionGroupUsers",
         "security": [
           {
             "APIToken": []
@@ -5097,7 +4082,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_addUser",
+        "operationId": "account_createDistributionGroupUsers",
         "security": [
           {
             "APIToken": []
@@ -5159,7 +4144,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_removeUser",
+        "operationId": "account_deleteDistributionGroupUsers",
         "security": [
           {
             "APIToken": []
@@ -5167,120 +4152,6 @@
         ],
         "tags": [
           "account"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/devices/download_csv": {
-      "get": {
-        "operationId": "getDeviceListForDistributionGroup",
-        "description": "Returns all devices associated with the given distribution group",
-        "parameters": [
-          {
-            "name": "distribution_group_name",
-            "type": "string",
-            "in": "path",
-            "description": "The name of the distribution group.",
-            "required": true
-          },
-          {
-            "name": "unprovisioned_only",
-            "type": "boolean",
-            "in": "query",
-            "description": "when true, filters out provisioned devices",
-            "default": false
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "produces": [
-          "text/csv"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DeviceInfo"
-              }
-            }
-          },
-          "404": {
-            "description": "<b>not_found</b>: A distribution group can't be found.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "500": {
-            "description": "An internal error.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/devices": {
-      "get": {
-        "operationId": "getDevicesForDistributionGroup",
-        "description": "Returns all devices associated with the given distribution group",
-        "parameters": [
-          {
-            "name": "distribution_group_name",
-            "type": "string",
-            "in": "path",
-            "description": "The name of the distribution group.",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DeviceInfo"
-              }
-            }
-          },
-          "404": {
-            "description": "<b>not_found</b>: A distribution group can't be found.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "500": {
-            "description": "An internal error.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
         ]
       }
     },
@@ -5328,7 +4199,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_get",
+        "operationId": "account_getDistributionGroup",
         "security": [
           {
             "APIToken": []
@@ -5390,7 +4261,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_update",
+        "operationId": "account_updateDistributionGroup",
         "security": [
           {
             "APIToken": []
@@ -5440,7 +4311,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_delete",
+        "operationId": "account_deleteDistributionGroup",
         "security": [
           {
             "APIToken": []
@@ -5485,7 +4356,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_list",
+        "operationId": "account_getDistributionGroups",
         "security": [
           {
             "APIToken": []
@@ -5546,7 +4417,7 @@
             }
           }
         },
-        "operationId": "distributionGroups_create",
+        "operationId": "account_createDistributionGroup",
         "security": [
           {
             "APIToken": []
@@ -5580,7 +4451,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/DeviceSelection"
@@ -5644,12 +4515,96 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/crashes_info": {
-      "get": {
-        "description": "Gets whether the application has any crashes",
-        "summary": "Gets whether the application has any crashes",
-        "operationId": "Crashes_getCrashInfo",
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases/{release_label}": {
+      "patch": {
+        "description": "Modifies a CodePush release metadata under the given Deployment",
+        "operationId": "codepush_patchRelease",
         "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/path_release_label"
+          },
+          {
+            "name": "release",
+            "description": "Release modification. All fields are optional and only provided fields will get updated.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateReleaseModification"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases": {
+      "delete": {
+        "description": "Clears a Deployment of releases",
+        "operationId": "codepush_deleteReleases",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "get": {
+        "description": "Gets the history of releases on a Deployment",
+        "operationId": "codepush_getReleases",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
           {
             "$ref": "#/parameters/owner_name"
           },
@@ -5661,7 +4616,10 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/AppCrashesInfo"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LiveUpdateRelease"
+              }
             }
           },
           "default": {
@@ -5677,20 +4635,347 @@
           }
         ],
         "tags": [
-          "crash"
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/metrics": {
+      "get": {
+        "description": "Gets all releases metrics for specified Deployment",
+        "operationId": "codepush_getDeploymentMetrics",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LiveUpdateReleaseMetric"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}": {
+      "delete": {
+        "description": "Deletes a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_deleteDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "get": {
+        "description": "Gets a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_getDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "patch": {
+        "description": "Modifies a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_patchDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "name": "deployment",
+            "description": "Deployment modification. All fields are optional and only provided fields will get updated.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentModification"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/download": {
+      "post": {
+        "description": "Report download of specified release",
+        "operationId": "codepush_postDownloadStatusMetric",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_key"
+          },
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateStatusMetricMetadata"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/deploy": {
+      "post": {
+        "description": "Report Deployment status metric",
+        "operationId": "codepush_postDeployStatusMetric",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_key"
+          },
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateStatusMetricMetadata"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments": {
+      "get": {
+        "description": "Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the given app",
+        "operationId": "codepush_getDeployments",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Deployment"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "post": {
+        "description": "Creates a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_postDeployments",
+        "parameters": [
+          {
+            "name": "deployment",
+            "description": "Deployment to be created",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
         ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/stacktrace": {
       "get": {
         "description": "Gets a stacktrace for a specific error",
-        "operationId": "Crashes_getGroupStacktrace",
+        "operationId": "crash_getGroupStacktrace",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
-          },
-          {
-            "$ref": "#/parameters/grouping_only"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -5726,16 +5011,13 @@
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/stacktrace": {
       "get": {
         "description": "Gets a stacktrace for a specific error",
-        "operationId": "Crashes_getErrorStacktrace",
+        "operationId": "crash_getErrorStacktrace",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
           },
           {
             "$ref": "#/parameters/path_crash_id"
-          },
-          {
-            "$ref": "#/parameters/grouping_only"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -5768,52 +5050,10 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/raw_url": {
-      "get": {
-        "description": "Gets the URL to download json of a specific crash",
-        "operationId": "Crashes_getCrashRawUrl",
-        "parameters": [
-          {
-            "$ref": "#/parameters/path_crash_group_id"
-          },
-          {
-            "$ref": "#/parameters/path_crash_id"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/CrashRawUrl"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "crash"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}": {
       "get": {
         "description": "Gets a specific error for an app",
-        "operationId": "Crashes_getCrash",
+        "operationId": "crash_getCrash",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
@@ -5861,7 +5101,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes": {
       "get": {
         "description": "Gets all crashes of the app",
-        "operationId": "Crashes_getCrashes",
+        "operationId": "crash_getCrashes",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
@@ -5921,7 +5161,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}": {
       "get": {
         "description": "Gets a specific group",
-        "operationId": "Crashes_getCrashGroup",
+        "operationId": "crash_getCrashGroup",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
@@ -5958,7 +5198,7 @@
       },
       "patch": {
         "description": "Updates a group",
-        "operationId": "Crashes_patchCrashGroup",
+        "operationId": "crash_patchCrashGroup",
         "parameters": [
           {
             "$ref": "#/parameters/path_crash_group_id"
@@ -6007,7 +5247,7 @@
       "get": {
         "description": "Gets a list of crashes",
         "summary": "Gets a list of crashes",
-        "operationId": "Crashes_getCrashGroups",
+        "operationId": "crash_getCrashGroups",
         "parameters": [
           {
             "$ref": "#/parameters/last_occurrence_from"
@@ -6065,7 +5305,7 @@
       "get": {
         "description": "",
         "summary": "",
-        "operationId": "Crashes_getCrashGroupCounts",
+        "operationId": "crash_getCrashGroupCounts",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -6100,14 +5340,15 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}": {
       "get": {
-        "description": "Returns commit information for a batch of shas. (Deprecated. Use /apps/{app_id}/commits/batch instead with query string hashes)",
+        "description": "Returns commit information for a batch of shas",
         "parameters": [
           {
             "name": "sha_collection",
             "type": "string",
             "in": "path",
             "description": "A collection of commit SHAs comma-delimited",
-            "required": true
+            "required": true,
+            "x-ms-skip-url-encoding": true
           },
           {
             "$ref": "#/parameters/form"
@@ -6127,47 +5368,7 @@
             }
           }
         },
-        "operationId": "commits_deprecatedListBySha",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "build"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/commits/batch": {
-      "get": {
-        "description": "Returns commit information for a batch of shas",
-        "parameters": [
-          {
-            "name": "hashes",
-            "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "A collection of commit SHAs comma-delimited",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/CommitDetailsList"
-            }
-          }
-        },
-        "operationId": "commits_listByShaList",
+        "operationId": "build_getCommits",
         "security": [
           {
             "APIToken": []
@@ -6200,7 +5401,7 @@
             }
           }
         },
-        "operationId": "builds_getLog",
+        "operationId": "build_getBuildLogs",
         "security": [
           {
             "APIToken": []
@@ -6246,7 +5447,7 @@
             }
           }
         },
-        "operationId": "builds_getDownloadUri",
+        "operationId": "build_getBuildDownload",
         "security": [
           {
             "APIToken": []
@@ -6288,7 +5489,7 @@
             }
           }
         },
-        "operationId": "builds_distribute",
+        "operationId": "build_postDistributeRequest",
         "security": [
           {
             "APIToken": []
@@ -6321,7 +5522,7 @@
             }
           }
         },
-        "operationId": "builds_get",
+        "operationId": "build_getBuild",
         "security": [
           {
             "APIToken": []
@@ -6360,7 +5561,7 @@
             }
           }
         },
-        "operationId": "builds_update",
+        "operationId": "build_updateBuildStatus",
         "security": [
           {
             "APIToken": []
@@ -6393,7 +5594,6 @@
             "description": "Bad Request"
           }
         },
-        "operationId": "builds_getStatusByAppId",
         "security": [
           {
             "APIToken": []
@@ -6401,7 +5601,8 @@
         ],
         "tags": [
           "build"
-        ]
+        ],
+        "operationId": "build_getV01AppsByOwnerNameByAppNameBuildServiceStatus"
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/branches/{branch}/toolset_projects": {
@@ -6452,7 +5653,7 @@
             }
           }
         },
-        "operationId": "builds_listToolsetProjects",
+        "operationId": "build_getProjectInformation",
         "security": [
           {
             "APIToken": []
@@ -6491,7 +5692,7 @@
             }
           }
         },
-        "operationId": "branchConfigurations_get",
+        "operationId": "build_getBranchConfiguration",
         "security": [
           {
             "APIToken": []
@@ -6522,7 +5723,7 @@
             }
           }
         },
-        "operationId": "branchConfigurations_create",
+        "operationId": "build_createBranchConfiguration",
         "security": [
           {
             "APIToken": []
@@ -6553,7 +5754,7 @@
             }
           }
         },
-        "operationId": "branchConfigurations_update",
+        "operationId": "build_updateBranchConfiguration",
         "security": [
           {
             "APIToken": []
@@ -6584,7 +5785,7 @@
             }
           }
         },
-        "operationId": "branchConfigurations_delete",
+        "operationId": "build_deleteBranchConfiguration",
         "security": [
           {
             "APIToken": []
@@ -6617,7 +5818,7 @@
             }
           }
         },
-        "operationId": "builds_listByBranch",
+        "operationId": "build_getBranchBuilds",
         "security": [
           {
             "APIToken": []
@@ -6657,7 +5858,7 @@
             }
           }
         },
-        "operationId": "builds_queue",
+        "operationId": "build_queueBuild",
         "security": [
           {
             "APIToken": []
@@ -6693,7 +5894,7 @@
             }
           }
         },
-        "operationId": "builds_listBranches",
+        "operationId": "build_getBranches",
         "security": [
           {
             "APIToken": []
@@ -6874,6 +6075,42 @@
             "description": "Count of sessions in the time range.",
             "schema": {
               "$ref": "#/definitions/SessionCounts"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/sample_devices": {
+      "get": {
+        "operationId": "Analytics_GetSampleDevices",
+        "description": "Get list of sample devices.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of sample devices.",
+            "schema": {
+              "$ref": "#/definitions/SampleDevices"
             }
           },
           "default": {
@@ -7850,6 +7087,158 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/audiences/{audience_name}": {
+      "head": {
+        "operationId": "Analytics_AudienceNameExists",
+        "description": "Returns whether audience definition exists.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Audiences exists."
+          },
+          "402": {
+            "description": "Audiences does not exist."
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      },
+      "get": {
+        "operationId": "Analytics_GetAudience",
+        "description": "Gets audience definition.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audiences definition.",
+            "schema": {
+              "$ref": "#/definitions/Audience"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      },
+      "put": {
+        "operationId": "Analytics_CreateOrUpdateAudience",
+        "description": "Creates or updates audience definition.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/AudienceBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated audiences definition.",
+            "schema": {
+              "$ref": "#/definitions/Audience"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/audiences": {
+      "get": {
+        "operationId": "Analytics_ListAudiences",
+        "description": "Get list of audiences.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of audiences.",
+            "schema": {
+              "$ref": "#/definitions/AudienceListResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/active_device_counts": {
       "get": {
         "operationId": "Analytics_DeviceCounts",
@@ -7926,7 +7315,7 @@
             }
           }
         },
-        "operationId": "apps_get",
+        "operationId": "account_getApp",
         "security": [
           {
             "APIToken": []
@@ -7986,7 +7375,7 @@
             }
           }
         },
-        "operationId": "apps_update",
+        "operationId": "account_updateApp",
         "security": [
           {
             "APIToken": []
@@ -8023,7 +7412,7 @@
             }
           }
         },
-        "operationId": "apps_delete",
+        "operationId": "account_deleteApp",
         "security": [
           {
             "APIToken": []
@@ -8074,7 +7463,7 @@
             }
           }
         },
-        "operationId": "apps_create",
+        "operationId": "account_createApp",
         "security": [
           {
             "APIToken": []
@@ -8110,7 +7499,7 @@
             }
           }
         },
-        "operationId": "apps_list",
+        "operationId": "account_getMemberApps",
         "security": [
           {
             "APIToken": []
@@ -8123,7 +7512,7 @@
     },
     "/v0.1/api_tokens/{api_token_id}": {
       "delete": {
-        "operationId": "deleteApiToken",
+        "operationId": "account_deleteApiToken",
         "description": "Delete the api_token object with the specific id",
         "parameters": [
           {
@@ -8169,7 +7558,7 @@
     },
     "/v0.1/api_tokens": {
       "get": {
-        "operationId": "getApiTokens",
+        "operationId": "account_getApiTokens",
         "description": "Returns api tokens for the authenticated user",
         "responses": {
           "200": {
@@ -8204,7 +7593,7 @@
         ]
       },
       "post": {
-        "operationId": "createApiToken",
+        "operationId": "account_createApiToken",
         "description": "Creates a new API token",
         "parameters": [
           {
@@ -8409,9 +7798,8 @@
           "description": "The OS the app will be running on",
           "type": "string",
           "enum": [
-            "Android",
             "iOS",
-            "Tizen",
+            "Android",
             "Windows"
           ]
         },
@@ -8538,11 +7926,18 @@
           "description": "The display name of the organization",
           "type": "string"
         },
+        "email": {
+          "type": "string",
+          "description": "The billing email address of the organization"
+        },
         "name": {
           "description": "The name of the organization used in URLs",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "name"
+      ]
     },
     "OrganizationUserPatchRequest": {
       "properties": {
@@ -8747,10 +8142,8 @@
           "description": "The OS the app will be running on",
           "type": "string",
           "enum": [
-            "Android",
             "iOS",
-            "macOS",
-            "Tizen",
+            "Android",
             "Windows"
           ]
         },
@@ -8761,11 +8154,9 @@
           "description": "The platform of the app",
           "type": "string",
           "enum": [
-            "Cordova",
             "Java",
             "Objective-C-Swift",
             "React-Native",
-            "Unity",
             "UWP",
             "Xamarin"
           ]
@@ -9164,6 +8555,7 @@
       "required": [
         "id",
         "display_name",
+        "email",
         "name",
         "type"
       ]
@@ -9323,7 +8715,7 @@
           }
         },
         "javascript": {
-          "description": "package.json files",
+          "description": "package.json filess",
           "type": "array",
           "items": {
             "type": "string"
@@ -10207,105 +9599,6 @@
         }
       }
     },
-    "UserDevicesResponse": {
-      "description": "A response to a request for a list of devices",
-      "required": [
-        "userId",
-        "devices"
-      ],
-      "properties": {
-        "userId": {
-          "type": "string",
-          "description": "The user to whom the devices are registered"
-        },
-        "devices": {
-          "type": "array",
-          "description": "The devices registered to the user",
-          "items": {
-            "$ref": "#/definitions/DeviceInfo"
-          }
-        }
-      }
-    },
-    "DeviceRegistrationRequest": {
-      "description": "A request containing information to add an existing user to a device that was already registered",
-      "properties": {
-        "UDID": {
-          "description": "The UDID of the device a user should be registered for.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "UDID"
-      ]
-    },
-    "DeviceRegistrationResponse": {
-      "description": "A response containing information about theg user who was added to a already registered device",
-      "properties": {
-        "UDID": {
-          "description": "The UDID of the device a user schould be registered for.",
-          "type": "string"
-        },
-        "user_id": {
-          "description": "The ID of the user.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "UDID",
-        "user_id"
-      ]
-    },
-    "DeviceConfigurationResponse": {
-      "description": "A response containing the fully encoded binary blob for a mobileconfig",
-      "properties": {
-        "data_url": {
-          "description": "A data URL containing a signed mobileconfig profile",
-          "type": "string"
-        }
-      },
-      "required": [
-        "data_url"
-      ]
-    },
-    "DeviceInfo": {
-      "description": "The information for a single iOS device",
-      "required": [
-        "UDID",
-        "model",
-        "lastVersion"
-      ],
-      "properties": {
-        "UDID": {
-          "type": "string",
-          "description": "The Unique Device IDentifier of the device"
-        },
-        "model": {
-          "type": "string",
-          "description": "The model identifier of the device, in the format iDeviceM,N"
-        },
-        "lastVersion": {
-          "type": "string",
-          "description": "The last known OS version running on the device"
-        },
-        "serial": {
-          "type": "string",
-          "description": "The device's serial number. Always empty or undefined at present."
-        },
-        "IMET": {
-          "type": "string",
-          "description": "The device's International Mobile Equipment Identity number. Always empty or undefined at present."
-        },
-        "owner_id": {
-          "type": "string",
-          "description": "The user ID of the device owner."
-        },
-        "status": {
-          "type": "string",
-          "description": "The provisioning status of the device."
-        }
-      }
-    },
     "Symbol": {
       "properties": {
         "symbol_id": {
@@ -10408,7 +9701,7 @@
           "description": "The symbol ids",
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/Symbol"
           }
         },
         "origin": {
@@ -10491,17 +9784,6 @@
       "required": [
         "status"
       ]
-    },
-    "AppCrashesInfo": {
-      "required": [
-        "has_crashes"
-      ],
-      "type": "object",
-      "properties": {
-        "has_crashes": {
-          "type": "boolean"
-        }
-      }
     },
     "AppVersion": {
       "required": [
@@ -10772,17 +10054,6 @@
     "RawCrashLog": {
       "type": "object"
     },
-    "CrashRawUrl": {
-      "required": [
-        "crash_raw_url"
-      ],
-      "type": "object",
-      "properties": {
-        "crash_raw_url": {
-          "type": "string"
-        }
-      }
-    },
     "CrashGroup": {
       "required": [
         "crash_group_id",
@@ -10860,9 +10131,6 @@
             "closed",
             "ignored"
           ]
-        },
-        "annotation": {
-          "type": "string"
         }
       }
     },
@@ -11926,6 +11194,21 @@
         }
       }
     },
+    "SampleDevices": {
+      "description": "List of sample devices.",
+      "properties": {
+        "values": {
+          "description": "List of sample devices.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          }
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
     "AudienceListResult": {
       "description": "List of audiences.",
       "properties": {
@@ -11951,10 +11234,9 @@
           "description": "Audience name.",
           "type": "string"
         },
-        "estimated_count": {
+        "estimatedSize": {
           "description": "Estimated audience size.",
-          "type": "integer",
-          "format": "int64"
+          "type": "number"
         },
         "state": {
           "description": "Audience state.",
@@ -11979,57 +11261,10 @@
           "description": "Audience definition in OData format.",
           "type": "string"
         },
-        "enabled": {
-          "type": "boolean",
-          "default": true
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "date"
-            ]
-          }
-        },
         "timestamp": {
           "description": "Date the audience was last refreshed.",
           "type": "string",
           "format": "date-time"
-        }
-      }
-    },
-    "AudienceTestResult": {
-      "description": "Audience with details.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AudienceSummary"
-        }
-      ],
-      "properties": {
-        "definition": {
-          "description": "Audience definition in OData format.",
-          "type": "string"
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "date"
-            ]
-          }
-        },
-        "estimated_total_count": {
-          "description": "Estimated total audience size.",
-          "type": "integer",
-          "format": "int64"
         }
       }
     },
@@ -12040,22 +11275,6 @@
         "definition": {
           "description": "Audience definition in OData format.",
           "type": "string"
-        },
-        "enabled": {
-          "type": "boolean",
-          "default": true
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "date"
-            ]
-          }
         }
       },
       "required": [
@@ -12080,27 +11299,15 @@
         "nextLink": {
           "type": "string"
         }
-      },
-      "required": [
-        "values"
-      ]
+      }
     },
     "NotificationDetailsResult": {
       "description": "Notification statistics",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NotificationDefinition"
-        }
-      ],
+      "type": "object",
       "properties": {
         "notification_id": {
           "description": "Notification id.",
           "type": "string"
-        },
-        "send_time": {
-          "description": "Notification send time",
-          "type": "string",
-          "format": "date-time"
         },
         "pns_send_failure": {
           "description": "Number of the notifications failed to send to the push provider.",
@@ -12124,27 +11331,28 @@
           ]
         }
       },
-      "required": [
-        "notification_id",
-        "state"
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationResult"
+        }
+      ]
+    },
+    "NotificationResult": {
+      "description": "Notification result",
+      "properties": {
+        "send_time": {
+          "description": "Notification send time",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationDefinition"
+        }
       ]
     },
     "NotificationDefinition": {
-      "description": "Notification definition object",
-      "type": "object",
-      "properties": {
-        "notification_target": {
-          "$ref": "#/definitions/NotificationTarget"
-        },
-        "notification_content": {
-          "$ref": "#/definitions/NotificationContent"
-        }
-      },
-      "required": [
-        "notification_content"
-      ]
-    },
-    "NotificationContent": {
       "description": "Notification definition object",
       "type": "object",
       "properties": {
@@ -12163,6 +11371,17 @@
           "type": "string",
           "maxLength": 4000
         },
+        "platform_type": {
+          "description": "Notification platform type",
+          "type": "string",
+          "enum": [
+            "apns",
+            "gcm"
+          ]
+        },
+        "notification_target": {
+          "$ref": "#/definitions/NotificationTarget"
+        },
         "custom_data": {
           "description": "Notification custom data(priority, expiration, etc.)",
           "type": "object",
@@ -12173,7 +11392,8 @@
       },
       "required": [
         "name",
-        "body"
+        "body",
+        "platform_type"
       ]
     },
     "NotificationSendSucceededResult": {
@@ -12183,10 +11403,7 @@
           "type": "string",
           "description": "The unique notification identifier."
         }
-      },
-      "required": [
-        "notification_id"
-      ]
+      }
     },
     "NotificationTarget": {
       "description": "Generic notification target.",
@@ -12220,10 +11437,23 @@
       "properties": {
         "type": {
           "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "Configuration state.",
+          "enum": [
+            "configured",
+            "configuring",
+            "expired",
+            "not_configured",
+            "deleted",
+            "deleting"
+          ]
         }
       },
       "required": [
-        "type"
+        "type",
+        "status"
       ]
     },
     "DeviceConfiguration": {
@@ -12571,77 +11801,6 @@
       },
       "required": [
         "shortId"
-      ]
-    },
-    "DeviceSet": {
-      "title": "Device Set",
-      "description": "The name and devices of the device set",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifier of the device set",
-          "type": "string"
-        },
-        "manufacturerCount": {
-          "description": "The number of manufacturers in the device set's device selection",
-          "type": "number"
-        },
-        "name": {
-          "description": "Name of the device set",
-          "type": "string"
-        },
-        "shortId": {
-          "description": "Short ID of the device set's device selection",
-          "type": "string"
-        },
-        "owner": {
-          "$ref": "#/definitions/DeviceSetOwner"
-        },
-        "osVersionCount": {
-          "description": "The number of os versions in the device set's device selection",
-          "type": "number"
-        },
-        "deviceConfigurations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DeviceConfiguration"
-          }
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "shortId",
-        "owner",
-        "deviceConfigurations"
-      ]
-    },
-    "DeviceSetOwner": {
-      "title": "Device Set Owner",
-      "description": "The owner of a device set",
-      "type": "object",
-      "properties": {
-        "type": {
-          "description": "Type of account",
-          "type": "string"
-        },
-        "id": {
-          "description": "Account ID",
-          "type": "string"
-        },
-        "displayName": {
-          "description": "Display name of the account",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name of the account",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "id",
-        "name"
       ]
     },
     "Subscription": {
@@ -13202,6 +12361,173 @@
           "type": "string"
         }
       }
+    },
+    "PushConfig": {
+      "type": "object",
+      "properties": {
+        "apnsCredential": {
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string"
+            },
+            "apnsCertificate": {
+              "type": "string"
+            }
+          }
+        },
+        "gcmCredential": {
+          "type": "object",
+          "properties": {
+            "googleApiKey": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Deployment": {
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "latest_release": {
+          "$ref": "#/definitions/LiveUpdateRelease"
+        }
+      }
+    },
+    "DeploymentModification": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "LiveUpdateRelease": {
+      "properties": {
+        "target_binary_range": {
+          "type": "string"
+        },
+        "blob_url": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_disabled": {
+          "type": "boolean"
+        },
+        "is_mandatory": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        },
+        "original_deployment": {
+          "type": "string",
+          "description": "Set on 'Promote'"
+        },
+        "original_label": {
+          "type": "string",
+          "description": "Set on 'Promote' and 'Rollback'"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "released_by": {
+          "type": "string"
+        },
+        "release_method": {
+          "type": "string",
+          "enum": [
+            "Upload",
+            "Promote",
+            "Rollback"
+          ],
+          "description": "The release method is unknown if unspecified"
+        },
+        "rollout": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "number"
+        },
+        "upload_time": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateReleaseModification": {
+      "properties": {
+        "target_binary_range": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_disabled": {
+          "type": "boolean"
+        },
+        "is_mandatory": {
+          "type": "boolean"
+        },
+        "rollout": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateReleaseMetric": {
+      "required": [
+        "label",
+        "active"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "active": {
+          "type": "integer"
+        },
+        "downloaded": {
+          "type": "integer"
+        },
+        "failed": {
+          "type": "integer"
+        },
+        "installed": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateStatusMetricMetadata": {
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "app_version": {
+          "type": "string"
+        },
+        "previous_deployment_key": {
+          "type": "string"
+        },
+        "previous_label_or_app_version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "client_unique_id": {
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -13342,14 +12668,6 @@
       "required": true,
       "x-ms-parameter-location": "method"
     },
-    "path_app_id": {
-      "name": "app_id",
-      "in": "path",
-      "required": true,
-      "description": "application id",
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
     "path_crash_group_id": {
       "name": "crash_group_id",
       "in": "path",
@@ -13416,8 +12734,8 @@
       "type": "string",
       "required": false,
       "enum": [
-        "CrashingErrors",
-        "HandledErrors"
+        "something",
+        "else"
       ],
       "x-ms-parameter-location": "method"
     },
@@ -13468,15 +12786,6 @@
       "type": "string",
       "required": false,
       "description": "A freetext search that matches in error, error types, error stack_traces and error user",
-      "x-ms-parameter-location": "method"
-    },
-    "grouping_only": {
-      "name": "grouping_only",
-      "in": "query",
-      "type": "boolean",
-      "default": false,
-      "required": false,
-      "description": "true if the stacktrace should be only the relevant thread / exception. Default is false",
       "x-ms-parameter-location": "method"
     },
     "path_symbol_group_id": {
@@ -13626,14 +12935,6 @@
       },
       "x-ms-parameter-location": "method"
     },
-    "IncludeDisabledAudiencesParameter": {
-      "name": "include_disabled",
-      "in": "query",
-      "description": "Include disabled audience definitions",
-      "required": false,
-      "type": "boolean",
-      "x-ms-parameter-location": "method"
-    },
     "CountParameter": {
       "name": "count",
       "in": "query",
@@ -13737,6 +13038,30 @@
       "type": "string",
       "format": "string",
       "x-ms-parameter-location": "method"
+    },
+    "path_deployment_name": {
+      "name": "deployment_name",
+      "in": "path",
+      "required": true,
+      "description": "deployment name",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "path_deployment_key": {
+      "name": "deployment_key",
+      "in": "path",
+      "required": true,
+      "description": "deployment key",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "path_release_label": {
+      "name": "release_label",
+      "in": "path",
+      "required": true,
+      "description": "release label",
+      "type": "string",
+      "x-ms-parameter-location": "method"
     }
   },
   "securityDefinitions": {
@@ -13771,6 +13096,9 @@
     },
     {
       "name": "data"
+    },
+    {
+      "name": "codepush"
     }
   ]
 }
