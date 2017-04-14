@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=6"
+  },
   "devDependencies": {
     "autorest": "^0.12.3",
     "lodash": "^4.17.4"

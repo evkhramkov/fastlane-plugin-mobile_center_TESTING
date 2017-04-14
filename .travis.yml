@@ -1,7 +1,6 @@
 # os: osx # enable this if you need macOS support
 language: node_js
 node_js:
-  - 4
   - 6
 before_install:
   - rvm install 2.2.4
