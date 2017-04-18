@@ -1,16 +1,16 @@
 # load variables from .env file
 open('../.env', 'r').readlines.each do |l|
   kv = l.split('=')
-  ENV[kv[0]] = kv[1]
+  ENV[kv[0]] = kv[1].chomp
 end
 
 lane :test do
   # mobile_center(api_token: ENV["MOBILE_CENTER_API_TOKEN"])
   release(
     api_token: ENV["MOBILE_CENTER_API_TOKEN"],
-    ipa: './app-release.apk',
-    app: 'v-evkhra/MyApplication',
-    group: 'Testers'
+    ipa: ENV["MOBILE_CENTER_DISTRIBUTE_IPA_FILE"],
+    app_name: ENV["MOBILE_CENTER_APP_NAME"],
+    group: ENV["MOBILE_CENTER_DISTRIBUTE_GROUP"]
   )
   # build(
   #   api_token: ENV['MOBILE_CENTER_API_TOKEN'],

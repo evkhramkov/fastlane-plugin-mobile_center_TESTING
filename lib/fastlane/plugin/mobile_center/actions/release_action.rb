@@ -1,14 +1,29 @@
 module Fastlane
   module Actions
     class ReleaseAction < Action
+      def self.connection(owner_name, app_name)
+        require 'faraday'
+        require 'faraday_middleware'
+
+        UI.message("Creating connection to v0.1/apps/#{owner_name}/#{app_name}/release_uploads")
+
+        options = {
+          url: "https://api.mobile.azure.com/v0.1/apps/#{owner_name}/#{app_name}/release_uploads"
+        }
+        
+        Faraday.new(options) do |builder|
+          builder.request :multipart
+          builder.request :url_encoded
+          builder.response :json, content_type: /\bjson$/
+          builder.use FaradayMiddleware::FollowRedirects
+          builder.adapter :net_http
+        end
+      end
+
       def self.run(params)
         UI.message("Running release action")
-        # Helper::MobileCenterHelper.build(
-        #   params[:api_token],
-        #   params[:branch],
-        #   params[:owner_name],
-        #   params[:app_name]
-        # )
+        connection = self.connection(params[:owner_name], params[:app_name])
+        puts connection
       end
 
       def self.description

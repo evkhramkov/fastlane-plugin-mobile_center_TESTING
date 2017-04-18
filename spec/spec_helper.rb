@@ -7,7 +7,7 @@ end
 # load variables from .env file
 open('.env', 'r').readlines.each do |l|
   kv = l.split('=')
-  ENV[kv[0]] = kv[1]
+  ENV[kv[0]] = kv[1].chomp
 end
 
 require 'fastlane' # to import the Action super class
