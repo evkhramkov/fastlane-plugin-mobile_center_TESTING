@@ -386,7 +386,7 @@
       }
     },
     "/v0.1/public/devices/register/complete": {},
-    "/v0.1/public/devices/register": {},
+    "/v 0.1/public/devices/register": {},
     "/v0.1/private/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_id}/devices": {},
     "/v0.1/orgs/{org_name}/users/{user_name}": {
       "patch": {

@@ -6,7 +6,7 @@ module Fastlane
         require 'faraday_middleware'
 
         options = {
-          url: upload_url ? upload_url : "https://api.mobile.azure.com/v0.1"
+          url: upload_url ? upload_url : "https://api.mobile.azure.com"
         }
 
         Faraday.new(options) do |builder|
@@ -45,15 +45,67 @@ module Fastlane
         end
       end
 
+      def self.commit_release(api_token, owner_name, app_name, upload_id)
+        connection = self.connection
+
+        connection.patch do |req|
+          req.url("/v0.1/apps/#{owner_name}/#{app_name}/release_uploads/#{upload_id}")
+          req.headers['X-API-Token'] = api_token
+          req.body = {
+            "status" => "committed"
+          }
+        end
+      end
+
+      def self.add_to_group(api_token, release_url, group_name, release_notes = '')
+        connection = self.connection
+
+        connection.patch do |req|
+          req.url("/#{release_url}")
+          req.headers['X-API-Token'] = api_token
+          req.body = {
+            "distribution_group_name" => group_name,
+            "release_notes" => release_notes
+          }
+          puts req.body
+        end
+      end
+
       def self.run(params)
         UI.message("Running release action")
 
-        res = self.release_upload(params[:api_token], params[:owner_name], params[:app_name])
-        upload_id = res.body['upload_id']
-        upload_url = res.body['upload_url']
-
-        res = self.upload(params[:api_token], params[:file], upload_id, upload_url)
-        puts res.body
+        response = self.release_upload(params[:api_token], params[:owner_name], params[:app_name])
+        case response.status
+        when 200...300
+          upload_id = response.body['upload_id']
+          upload_url = response.body['upload_url']
+          UI.message("Start uploading release")
+          response = self.upload(params[:api_token], params[:file], upload_id, upload_url)
+          case response.status
+          when 200...300
+            UI.message("Uploaded successfully")
+            response = self.commit_release(params[:api_token], params[:owner_name], params[:app_name], upload_id)
+            case response.status
+            when 200...300
+              release_url = response.body['release_url']
+              UI.message("Release commited with url #{release_url}")
+              response = self.add_to_group(params[:api_token], release_url, params[:group])
+              case response.status
+              when 200...300
+                release = response.body
+                UI.message("Release #{release.short_version} was successfully released")
+              else
+                UI.user_error!("Error when trying to add release to group: #{response.status} - #{response.body}")
+              end
+            else
+              UI.user_error!("Error when trying to commit release: #{response.status} - #{response.body}")
+            end
+          else
+            UI.user_error!("Error when trying to upload file: #{response.status} - #{response.body}")
+          end
+        else
+          UI.user_error!("Error when trying to get prerequisites: #{response.status} - #{response.body}")
+        end
       end
 
       def self.description
