@@ -5,11 +5,17 @@ open('../.env', 'r').readlines.each do |l|
 end
 
 lane :test do
-  mobile_center(api_token: ENV["MOBILE_CENTER_API_TOKEN"])
-  build(
-    api_token: ENV['MOBILE_CENTER_API_TOKEN'],
-    branch: ENV['MOBILE_CENTER_BRANCH'],
-    owner_name: ENV['MOBILE_CENTER_OWNER_NAME'],
-    app_name: ENV['MOBILE_CENTER_APP_NAME']
+  # mobile_center(api_token: ENV["MOBILE_CENTER_API_TOKEN"])
+  release(
+    api_token: ENV["MOBILE_CENTER_API_TOKEN"],
+    ipa: './app-release.apk',
+    app: 'v-evkhra/MyApplication',
+    group: 'Testers'
   )
+  # build(
+  #   api_token: ENV['MOBILE_CENTER_API_TOKEN'],
+  #   branch: ENV['MOBILE_CENTER_BRANCH'],
+  #   owner_name: ENV['MOBILE_CENTER_OWNER_NAME'],
+  #   app_name: ENV['MOBILE_CENTER_APP_NAME']
+  # )
 end

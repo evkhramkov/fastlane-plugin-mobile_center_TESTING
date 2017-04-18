@@ -18,7 +18,7 @@ swagger_dest = "./swagger/swagger.before.json"
 swagger_fixed_dest = "./swagger/swagger.json"
 generated_dest = "./lib"
 
-environment = "prod"
+environment = "dev"
 
 namespace :swagger do
   desc "Download swagger api specifications"
