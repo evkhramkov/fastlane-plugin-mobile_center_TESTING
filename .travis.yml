@@ -1,4 +1,5 @@
 # os: osx # enable this if you need macOS support
+dist: trusty
 language: node_js
 node_js:
   - 6

@@ -156,6 +156,12 @@ module Fastlane
                                description: "Distribute group",
                                   optional: false,
                                       type: String)
+
+          FastlaneCore::ConfigItem.new(key: :release_notes,
+                                  env_name: "MOBILE_CENTER_DISTRIBUTE_RELEASE_NOTES",
+                               description: "Release notes",
+                                  optional: true,
+                                      type: String)
         ]
       end
 
