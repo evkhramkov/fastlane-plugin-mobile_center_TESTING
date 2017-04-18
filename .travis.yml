@@ -8,5 +8,4 @@ before_install:
 install:
   - 'bundle'
 script:
-  - 'rake'
-  - 'rake swagger'
+  - 'bundle exec fastlane test'
