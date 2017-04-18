@@ -1,7 +1,6 @@
 *.gem
 Gemfile.lock
 .env
-*.apk
 
 ## Documentation cache and generated files:
 /.yardoc/
