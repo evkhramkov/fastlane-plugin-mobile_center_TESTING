@@ -1,6 +1,7 @@
 module Fastlane
   module Actions
     class MobileCenterUploadAction < Action
+      # simple response handler for debug info and errors
       def self.handle_response(response)
         case response.status
         when 200...300
@@ -8,13 +9,13 @@ module Fastlane
             UI.message("DEBUG: #{JSON.pretty_generate(response.body)}\n")
           end
           response.body
-
         else
           UI.message("Error #{response.status}: #{response.body}")
           throw "Error"
         end
       end
 
+      # create request
       def self.connection(upload_url = false)
         require 'faraday'
         require 'faraday_middleware'
@@ -112,7 +113,7 @@ module Fastlane
 
         # TODO:
         # - handle upload failure: release should be aborted
-        # - properly handle errors
+        # - properly handle errors in each request
         #
       end
 
