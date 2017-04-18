@@ -8,7 +8,7 @@ lane :test do
   # mobile_center(api_token: ENV["MOBILE_CENTER_API_TOKEN"])
   release(
     api_token: ENV["MOBILE_CENTER_API_TOKEN"],
-    ipa: ENV["MOBILE_CENTER_DISTRIBUTE_IPA_FILE"],
+    file: ENV["MOBILE_CENTER_DISTRIBUTE_FILE"],
     app_name: ENV["MOBILE_CENTER_APP_NAME"],
     group: ENV["MOBILE_CENTER_DISTRIBUTE_GROUP"]
   )
