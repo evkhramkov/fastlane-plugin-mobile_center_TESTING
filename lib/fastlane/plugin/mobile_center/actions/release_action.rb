@@ -67,7 +67,6 @@ module Fastlane
             "distribution_group_name" => group_name,
             "release_notes" => release_notes
           }
-          puts req.body
         end
       end
 
@@ -93,7 +92,7 @@ module Fastlane
               case response.status
               when 200...300
                 release = response.body
-                UI.message("Release #{release.short_version} was successfully released")
+                UI.message("Release #{release['short_version']} was successfully released")
               else
                 UI.user_error!("Error when trying to add release to group: #{response.status} - #{response.body}")
               end
@@ -155,7 +154,7 @@ module Fastlane
                                   env_name: "MOBILE_CENTER_DISTRIBUTE_GROUP",
                                description: "Distribute group",
                                   optional: false,
-                                      type: String)
+                                      type: String),
 
           FastlaneCore::ConfigItem.new(key: :release_notes,
                                   env_name: "MOBILE_CENTER_DISTRIBUTE_RELEASE_NOTES",

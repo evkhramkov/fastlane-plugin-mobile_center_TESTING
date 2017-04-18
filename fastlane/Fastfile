@@ -1,7 +1,9 @@
 # load variables from .env file
-open('../.env', 'r').readlines.each do |l|
-  kv = l.split('=')
-  ENV[kv[0]] = kv[1].chomp
+if File.exist?('../.env')
+  open('../.env', 'r').readlines.each do |l|
+    kv = l.split('=')
+    ENV[kv[0]] = kv[1].chomp
+  end
 end
 
 lane :test do
@@ -10,7 +12,8 @@ lane :test do
     api_token: ENV["MOBILE_CENTER_API_TOKEN"],
     file: ENV["MOBILE_CENTER_DISTRIBUTE_FILE"],
     app_name: ENV["MOBILE_CENTER_APP_NAME"],
-    group: ENV["MOBILE_CENTER_DISTRIBUTE_GROUP"]
+    group: ENV["MOBILE_CENTER_DISTRIBUTE_GROUP"],
+    release_notes: ENV["MOBILE_CENTER_DISTRIBUTE_RELEASE_NOTES"]
   )
   # build(
   #   api_token: ENV['MOBILE_CENTER_API_TOKEN'],
