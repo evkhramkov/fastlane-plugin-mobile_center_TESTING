@@ -4,7 +4,11 @@ module Fastlane
       def self.handle_response(response)
         case response.status
         when 200...300
+          if ENV['DEBUG_ACTION']
+            UI.message("DEBUG: #{JSON.pretty_generate(response.body)}\n")
+          end
           response.body
+
         else
           UI.message("Error #{response.status}: #{response.body}")
           throw "Error"
