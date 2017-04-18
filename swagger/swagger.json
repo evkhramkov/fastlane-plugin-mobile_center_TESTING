@@ -12218,6 +12218,16 @@
         "definition"
       ]
     },
+    "AudienceBlobResult": {
+      "description": "Audience definition.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Location of the audience blob.",
+          "type": "string"
+        }
+      }
+    },
     "NotificationsListResult": {
       "description": "List of notifications",
       "type": "object",
