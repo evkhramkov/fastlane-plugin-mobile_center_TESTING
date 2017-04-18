@@ -1,6 +1,6 @@
 module Fastlane
   module Actions
-    class ReleaseAction < Action
+    class MobileCenterUploadAction < Action
       def self.handle_response(response)
         case response.status
         when 200...300
@@ -32,6 +32,7 @@ module Fastlane
         end
       end
 
+      # get upload_id and upload_url for app
       def self.load_prerequisites(api_token, owner_name, app_name)
         connection = self.connection
 
@@ -44,6 +45,7 @@ module Fastlane
         self.handle_response(response)
       end
 
+      # upload binary for specified upload_url
       def self.upload(api_token, file, upload_id, upload_url)
         connection = self.connection(upload_url)
 
@@ -59,6 +61,7 @@ module Fastlane
         self.handle_response(response)
       end
 
+      # commit or abort uploaded release
       def self.update_release_upload(api_token, owner_name, app_name, upload_id, status)
         connection = self.connection
 
@@ -73,6 +76,7 @@ module Fastlane
         self.handle_response(response)
       end
 
+      # add release to distribution group
       def self.add_to_group(api_token, release_url, group_name, release_notes = '')
         connection = self.connection
 
@@ -102,46 +106,10 @@ module Fastlane
         release = self.add_to_group(params[:api_token], committed['release_url'], params[:group])
         UI.success("Release #{release['short_version']} was successfully released")
 
-        # case response.status
-        # when 200...300
-        #   upload_id = response.body['upload_id']
-        #   upload_url = response.body['upload_url']
-        #   UI.message("Uploading release binary...")
-        #   response = self.upload(params[:api_token], params[:file], upload_id, upload_url)
-        #   case response.status
-        #   when 200...300
-        #     UI.message("Uploaded successfully")
-        #     response = self.update_release_upload(params[:api_token], params[:owner_name], params[:app_name], upload_id, 'committed')
-        #     case response.status
-        #     when 200...300
-        #       release_url = response.body['release_url']
-        #       UI.message("Release committed")
-        #       response = self.add_to_group(params[:api_token], release_url, params[:group])
-        #       case response.status
-        #       when 200...300
-        #         release = response.body
-        #         UI.success("Release #{release['short_version']} was successfully released")
-        #       else
-        #         UI.user_error!("Error when trying to add release to group: #{response.status} - #{response.body}")
-        #       end
-        #     else
-        #       UI.user_error!("Error when trying to commit release: #{response.status} - #{response.body}")
-        #     end
-        #   else
-        #     UI.user_error!("Release upload failed: #{response.status} - #{response.body}")
-        #     UI.message("Aborting release...")
-        #     response = self.update_release_upload(params[:api_token], params[:owner_name], params[:app_name], upload_id, 'aborted')
-        #     case response.status
-        #     when 200...300
-        #       release = response.body
-        #       UI.message("Release aborted")
-        #     else
-        #       UI.user_error!("Error when trying to abort release: #{response.status} - #{response.body}")
-        #     end
-        #   end
-        # else
-        #   UI.user_error!("Error when loading prerequisites: #{response.status} - #{response.body}")
-        # end
+        # TODO:
+        # - handle upload failure: release should be aborted
+        # - properly handle errors
+        #
       end
 
       def self.description
@@ -149,16 +117,11 @@ module Fastlane
       end
 
       def self.authors
-        ["Evgeniy Khramkov"]
+        [""]
       end
 
       def self.return_value
         # If your method provides a return value, you can describe here what it does
-      end
-
-      def self.details
-        # Optional:
-        "visual studio mobile center integration plugin"
       end
 
       def self.available_options
