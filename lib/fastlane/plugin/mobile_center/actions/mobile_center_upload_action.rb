@@ -108,7 +108,7 @@ module Fastlane
         committed = self.update_release_upload(params[:api_token], params[:owner_name], params[:app_name], prerequisites['upload_id'], 'committed')
         UI.message("Release committed")
 
-        release = self.add_to_group(params[:api_token], committed['release_url'], params[:group])
+        release = self.add_to_group(params[:api_token], committed['release_url'], params[:group], params[:release_notes])
         UI.success("Release #{release['short_version']} was successfully released")
 
         # TODO:
