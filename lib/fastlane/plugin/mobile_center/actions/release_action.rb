@@ -37,7 +37,7 @@ module Fastlane
 
         options = {}
         options[:upload_id] = upload_id
-        options[:file] = Faraday::UploadIO.new(file, 'application/octet-stream') if file and File.exist?(file)
+        options[:ipa] = Faraday::UploadIO.new(file, 'application/octet-stream') if file and File.exist?(file)
 
         connection.post do |req|
           req.headers['X-HockeyAppToken'] = api_token
